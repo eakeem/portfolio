@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f2">
+  <meta name="description" content="Get in touch with Ellis Software about your next project.">
+  <title>Contact — Ellis Software</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="Ellis Software, home"><img class="brand-logo" src="ellis%20software%20logo2.jpeg" alt="Ellis Software"></a>
+      <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-menu"><span></span><span></span></button>
+      <div class="site-menu" id="site-menu">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="index.html#work">Selected work</a>
+        <a class="nav-cta" href="contact.html" aria-current="page">Let’s talk </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="contact-main page-width">
+    <section class="contact-intro reveal">
+      <p class="eyebrow"><span class="status-dot"></span>Ellis Software</p>
+      <h1>Tell me what<br>you’re <span class="serif-accent">thinking.</span></h1>
+      <div class="social-links contact-socials" aria-label="Social and contact links">
+        <a class="icon-link" href="https://wa.me/18768584016" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" data-tooltip="WhatsApp"><img class="brand-icon" src="https://cdn.simpleicons.org/whatsapp/15245f" alt="" aria-hidden="true"><span class="icon-tooltip" aria-hidden="true">WhatsApp</span></a>
+        <a class="icon-link" href="https://www.instagram.com/ellis_software/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-tooltip="Instagram"><img class="brand-icon" src="https://cdn.simpleicons.org/instagram/15245f" alt="" aria-hidden="true"><span class="icon-tooltip" aria-hidden="true">Instagram</span></a>
+        <a class="icon-link" href="https://www.linkedin.com/in/akeem-ellis-369ba9247/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-tooltip="LinkedIn"><i data-lucide="briefcase-business" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">LinkedIn</span></a>
+        <a class="icon-link" href="https://github.com/eakeem" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-tooltip="GitHub"><img class="brand-icon" src="https://cdn.simpleicons.org/github/15245f" alt="" aria-hidden="true"><span class="icon-tooltip" aria-hidden="true">GitHub</span></a>
+        <a class="icon-link" href="mailto:eakeem0@gmail.com" aria-label="Email" data-tooltip="Email"><i data-lucide="mail" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Email</span></a>
+        <a class="icon-link" href="tel:+18768584016" aria-label="Phone" data-tooltip="Phone"><i data-lucide="phone" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Phone</span></a>
+      </div>
+      <p class="hero-intro">Have a project, a small business, or just want to say hello? My inbox is open. Tell me a little about it and I’ll get back to you soon.</p>
+    </section>
+    <section class="contact-form-section reveal" aria-label="Send a message">
+      <form class="contact-form" data-contact-form data-email="eakeem0@gmail.com">
+        <label for="name">Your name</label>
+        <input id="name" name="name" type="text" autocomplete="name" placeholder="How should I address you?" required>
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <label for="project">A little about the project</label>
+        <textarea id="project" name="project" rows="5" placeholder="What are you hoping to make?" required></textarea>
+        <button class="button button-dark form-submit" type="submit">Write your message</button>
+        <p class="form-note">Your email app will open with your message ready.</p>
+      </form>
+    </section>
+    <div class="contact-foot reveal"><span>Usually replies within two working days.</span><span>Currently available for select projects <i class="status-dot"></i></span></div>
+  </main>
+
+  <footer class="site-footer page-width"><a class="brand" href="index.html" aria-label="Ellis Software, home"><img class="brand-logo" src="ellis%20software%20logo2.jpeg" alt="Ellis Software"></a><nav class="footer-nav" aria-label="Footer navigation"><a class="icon-link" href="index.html" aria-label="Home" data-tooltip="Home"><i data-lucide="house" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Home</span></a><a class="icon-link" href="index.html#work" aria-label="Selected work" data-tooltip="Selected work"><i data-lucide="briefcase-business" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Selected work</span></a><a class="icon-link" href="contact.html" aria-label="Contact" data-tooltip="Contact"><i data-lucide="contact" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Contact</span></a></nav><span>© <span data-year></span> Ellis Software</span></footer>
+</body>
+<script src="script.js" defer></script>
+</html>
