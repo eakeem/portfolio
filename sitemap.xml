@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+       <loc>https://ellissoftware.com/</loc>
+       <lastmod>2026-10-25T06:04:28+00:00</lastmod>
+       <priority>1.0000</priority>
+  </url>
+  <url>
+       <loc>https://ellissoftware.com/contact</loc>
+       <lastmod>2026-10-25T06:04:28+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://ellissoftware.com/terms-of-service</loc>
+       <lastmod>2026-10-25T06:04:28+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://ellissoftware.com/privacy-policy</loc>
+       <lastmod>2026-10-25T06:04:28+00:00</lastmod>
+       <priority>0.5120</priority>
+  </url>
+</urlset>
