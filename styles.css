@@ -156,13 +156,20 @@ h1, h2 { font-family: var(--display); font-weight: 500; letter-spacing: 0; }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
 .project-card:nth-child(2) { transition-delay: .08s; }
 .project-card:nth-child(3) { transition-delay: .16s; }
-.connect-blob { position: fixed; z-index: 20; right: 24px; bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 1px; color: var(--brand-indigo); transform: translateY(var(--connect-scroll-shift, 0px)) rotate(var(--connect-tilt, 0deg)); transition: transform .24s cubic-bezier(.2,.7,.2,1); }
+.connect-blob { position: fixed; z-index: 20; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; color: var(--brand-indigo); transform: translate3d(var(--connect-x, calc(100vw - 92px)), var(--connect-y, calc(100vh - 90px)), 0) rotate(var(--connect-tilt, 0deg)); transition: transform 2.4s cubic-bezier(.2,.72,.24,1); }
 .connect-blob-art { display: block; width: 68px; height: 60px; overflow: visible; filter: drop-shadow(0 5px 5px rgb(40 39 31 / 14%)); animation: connect-float 3s ease-in-out infinite; transform-origin: center; }
 .connect-blob-body { fill: #b6a4d6; stroke: #8c77b5; stroke-width: 1.5; }
 .connect-pupil { fill: #28271f; transform: translate(var(--connect-look-x, 0px), var(--connect-look-y, 0px)); transform-box: fill-box; transform-origin: center; transition: transform .12s ease-out; }
 .connect-blob-label { padding: 5px 11px; border: 1px solid #d7cde2; border-radius: 99px; background: #fffdf8; box-shadow: 0 3px 8px rgb(40 39 31 / 8%); font-size: 10px; font-weight: 600; line-height: 1; transition: background .2s, color .2s, transform .2s; }
 .connect-blob:hover .connect-blob-label, .connect-blob:focus-visible .connect-blob-label { transform: translateY(-2px); background: var(--brand-indigo); color: #fffdf8; }
-.connect-blob:hover .connect-blob-art, .connect-blob:focus-visible .connect-blob-art { animation: connect-giggle .45s ease-in-out infinite alternate; }
+.connect-message { position: absolute; z-index: 1; bottom: calc(100% + 9px); left: 50%; width: max-content; max-width: min(220px, 70vw); padding: 9px 12px; border: 1px solid #e3d9ca; border-radius: 12px 12px 3px 12px; background: #fffdf8; box-shadow: 0 5px 16px rgb(40 39 31 / 12%); color: var(--ink); font-size: 11px; line-height: 1.45; opacity: 0; pointer-events: none; transform: translate(-50%, 5px) scale(.96); transform-origin: bottom center; transition: opacity .25s ease, transform .25s ease; }
+.connect-blob[data-side="left"] .connect-message { left: 0; border-radius: 12px 12px 12px 3px; transform: translate(0, 5px) scale(.96); transform-origin: bottom left; }
+.connect-blob[data-side="right"] .connect-message { left: auto; right: 0; transform: translate(0, 5px) scale(.96); transform-origin: bottom right; }
+.connect-blob[data-message-position="below"] .connect-message { top: calc(100% + 9px); bottom: auto; border-radius: 3px 12px 12px 12px; transform-origin: top left; }
+.connect-blob[data-message-position="below"][data-side="right"] .connect-message { border-radius: 12px 3px 12px 12px; transform-origin: top right; }
+.connect-blob.has-message .connect-message { opacity: 1; transform: translate(0, 0) scale(1); }
+.connect-blob.is-giggling .connect-blob-art { animation: connect-giggle .75s ease-in-out; }
+.connect-blob:hover .connect-blob-art, .connect-blob:focus-visible .connect-blob-art { animation: connect-giggle .7s ease-in-out infinite alternate; }
 .connect-blob:focus-visible { border-radius: 12px; outline: 2px solid var(--brand-violet); outline-offset: 4px; }
 @keyframes connect-float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
 @keyframes connect-giggle { 0% { transform: rotate(-7deg) translateY(0); } 25% { transform: rotate(9deg) translateY(-2px); } 50% { transform: rotate(-9deg) translateY(0); } 75% { transform: rotate(7deg) translateY(-2px); } 100% { transform: rotate(-5deg) translateY(0); } }
@@ -187,7 +194,6 @@ h1, h2 { font-family: var(--display); font-weight: 500; letter-spacing: 0; }
 }
 @media (max-width: 600px) {
   html { scroll-padding-top: 74px; }
-  .connect-blob { right: 14px; bottom: 14px; }
   .connect-blob-art { width: 58px; height: 51px; }
   .page-width { width: calc(100% - 40px); }
   .site-header { padding: 10px 20px; }
