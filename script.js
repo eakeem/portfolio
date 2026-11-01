@@ -15,7 +15,7 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
   let pointerX = window.innerWidth / 2;
   let pointerY = window.innerHeight / 2;
   let activeSectionIndex = 0;
-  const sectionDwell = 24000;
+  const sectionDwell = 30000;
   const sectionMessageDuration = 5200;
   const messageBubble = connectBlob.querySelector('.connect-message');
   const socialMessages = {
@@ -145,8 +145,11 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
           scheduleSectionMove();
           return;
         }
-        moveToSection(activeSectionIndex + 1);
-        connectBlob.classList.add('is-giggling');
+        const nextIndex = (activeSectionIndex + 1) % targets.length;
+        moveToSection(nextIndex);
+        if (Math.random() < 0.45) {
+          connectBlob.classList.add('is-giggling');
+        }
       } else {
         scheduleSectionMove();
       }
@@ -158,7 +161,7 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
     giggleTimer = window.setTimeout(() => {
       connectBlob.classList.add('is-giggling');
       scheduleGiggle();
-    }, 18000 + Math.random() * 12000);
+    }, 20000 + Math.random() * 15000);
   };
 
   const updateBlobTracking = () => {
@@ -175,6 +178,8 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
     connectBlob.style.setProperty('--connect-tilt', `${tilt * 0.8}deg`);
     connectBlob.style.setProperty('--connect-look-x', `${lookX}px`);
     connectBlob.style.setProperty('--connect-look-y', `${lookY}px`);
+    connectBlob.style.setProperty('--connect-fluid-x', `${clamp(dx / 180, -1, 1)}`);
+    connectBlob.style.setProperty('--connect-fluid-y', `${clamp(dy / 140, -1, 1)}`);
   };
 
   window.addEventListener('pointermove', (event) => {
@@ -193,6 +198,8 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
     connectBlob.style.setProperty('--connect-look-x', '0px');
     connectBlob.style.setProperty('--connect-look-y', '0px');
     connectBlob.style.setProperty('--connect-tilt', '0deg');
+    connectBlob.style.setProperty('--connect-fluid-x', '0');
+    connectBlob.style.setProperty('--connect-fluid-y', '0');
     moveToSection(findCurrentSection());
   });
 
