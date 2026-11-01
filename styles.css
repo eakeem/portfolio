@@ -146,8 +146,6 @@ h1, h2 { font-family: var(--display); font-weight: 500; letter-spacing: 0; }
 .connect-blob-art { display: block; width: 78px; height: 72px; overflow: visible; filter: drop-shadow(0 12px 18px rgba(63, 38, 112, 0.35)); animation: connect-float 3s ease-in-out infinite; transform-origin: center; }
 .connect-blob-body { fill: url(#connect-gradient); stroke: rgba(136,249,192,0.55); stroke-width: 1.6; }
 .connect-pupil { fill: #090d18; transform: translate(var(--connect-look-x, 0px), var(--connect-look-y, 0px)); transform-box: fill-box; transform-origin: center; transition: transform .12s ease-out; }
-.connect-blob-label { padding: 5px 11px; border: 1px solid rgba(99,49,251,0.4); border-radius: 99px; background: rgba(3, 4, 10, 0.92); box-shadow: 0 3px 8px rgba(0,0,0,0.18); font-size: 10px; font-weight: 600; line-height: 1; transition: background .2s, color .2s, transform .2s; }
-.connect-blob:hover .connect-blob-label, .connect-blob:focus-visible .connect-blob-label { transform: translateY(-2px); background: var(--brand-indigo); color: #fff; }
 .connect-message { position: absolute; z-index: 1; bottom: calc(100% + 9px); left: 50%; width: max-content; max-width: min(220px, 70vw); padding: 9px 12px; border: 1px solid rgba(136,249,192,0.2); border-radius: 12px 12px 12px 3px; background: rgba(5, 8, 16, 0.95); box-shadow: 0 12px 24px rgba(0,0,0,0.18); color: rgba(237,241,255,0.82); font-size: 11px; line-height: 1.35; opacity: 0; transform: translate(-50%, 5px) scale(.96); transform-origin: bottom center; transition: opacity .18s ease, transform .18s ease; }
 .connect-blob[data-side="left"] .connect-message { left: 0; border-radius: 12px 12px 12px 3px; transform: translate(0, 5px) scale(.96); transform-origin: bottom left; }
 .connect-blob[data-side="right"] .connect-message { left: auto; right: 0; transform: translate(0, 5px) scale(.96); transform-origin: bottom right; }
@@ -272,8 +270,6 @@ h1, h2 { font-family: var(--display); font-weight: 500; letter-spacing: 0; }
 .connect-highlight-line-three { top: 13px; right: 9px; width: 14px; border-top-width: 1.5px; opacity: .82; transform: rotate(36deg); }
 .connect-blob-face { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .connect-pupil { fill: #171925; transform: translate(var(--connect-look-x, 0px), var(--connect-look-y, 0px)); transform-box: fill-box; transform-origin: center; transition: transform .12s ease-out; }
-.connect-blob-label { padding: 5px 12px; border: 1px solid rgba(136,249,192,0.32); border-radius: 999px; background: rgba(3,4,10,0.94); box-shadow: 0 3px 8px rgb(0 0 0 / 28%); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1; transition: background .2s, color .2s, transform .2s, border-color .2s; }
-.connect-blob:hover .connect-blob-label, .connect-blob:focus-visible .connect-blob-label { transform: translateY(-2px); background: linear-gradient(135deg, var(--brand-indigo), #7d57ff); border-color: rgba(136,249,192,0.48); color: #fff; }
 .connect-message { position: absolute; z-index: 1; bottom: calc(100% + 9px); left: 50%; width: max-content; max-width: min(220px, 70vw); padding: 9px 12px; border: 1px solid rgba(136,249,192,0.3); border-radius: 12px 12px 3px 12px; background: rgba(5,8,16,0.97); box-shadow: 0 8px 20px rgb(0 0 0 / 32%); color: #fff; font-size: 11px; line-height: 1.45; opacity: 0; pointer-events: none; transform: translate(-50%, 5px) scale(.96); transform-origin: bottom center; transition: opacity .25s ease, transform .25s ease; }
 .connect-blob[data-side="left"] .connect-message { left: 0; border-radius: 12px 12px 12px 3px; transform: translate(0, 5px) scale(.96); transform-origin: bottom left; }
 .connect-blob[data-side="right"] .connect-message { left: auto; right: 0; transform: translate(0, 5px) scale(.96); transform-origin: bottom right; }
@@ -431,8 +427,6 @@ body {
 .connect-blob-art { filter: drop-shadow(0 8px 16px rgb(42 34 53 / 20%)); }
 .connect-blob-liquid { background: linear-gradient(145deg, #a18ac3 0%, #7350a2 30%, #501b89 68%, #15245f 100%); }
 .connect-blob-gloss { box-shadow: inset 1px 2px 2px rgb(255 255 255 / 30%), inset -3px -4px 9px rgb(29 14 92 / 18%); }
-.connect-blob-label { border-color: #d7cde2; background: #fffdf8; box-shadow: 0 3px 8px rgb(40 39 31 / 8%); color: var(--brand-indigo); }
-.connect-blob:hover .connect-blob-label, .connect-blob:focus-visible .connect-blob-label { background: var(--brand-indigo); border-color: #d7cde2; color: #fff; }
 .connect-message { border-color: #e3d9ca; background: #fffdf8; box-shadow: 0 5px 16px rgb(40 39 31 / 12%); color: var(--ink); }
 .connect-blob:focus-visible { outline-color: var(--brand-violet); }
 .menu-toggle { border-color: #d7cde2; background: #fff; }

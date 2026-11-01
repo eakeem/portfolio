@@ -80,9 +80,9 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
     return closestIndex;
   };
 
-  const showSectionMessage = (index) => {
-    if (!messageBubble || !targets[index]) return;
-    messageBubble.textContent = getSectionMessage(targets[index], index);
+  const showSectionMessage = (index, message) => {
+    if (!messageBubble || (!targets[index] && !message)) return;
+    messageBubble.textContent = message || getSectionMessage(targets[index], index);
     connectBlob.classList.add('has-message');
     window.clearTimeout(messageTimer);
     messageTimer = window.setTimeout(() => {
@@ -223,7 +223,7 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
   });
   activeSectionIndex = findCurrentSection();
   placeBlobAtSection(activeSectionIndex);
-  showSectionMessage(activeSectionIndex);
+  showSectionMessage(activeSectionIndex, "Hi, I'm Connect! I'll be your personal navigator.");
   scheduleSectionMove();
   scheduleGiggle();
   updateBlobTracking();
