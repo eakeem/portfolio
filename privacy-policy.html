@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f5f2">
+  <meta name="theme-color" content="#f5f0e7">
   <meta name="description" content="Learn how Ellis Software handles information when you visit this website or get in touch.">
   <title>Privacy Policy — Ellis Software</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,7 @@
 <body>
   <header class="site-header">
     <nav class="nav-shell" aria-label="Main navigation">
-      <a class="brand" href="index.html" aria-label="Ellis Software, home"><img class="brand-logo" src="ellis-software-logo-white.png" alt="Ellis Software"></a>
+      <a class="brand" href="index.html" aria-label="Ellis Software, home"><img class="brand-logo" src="ellis-software-logo.png" alt="Ellis Software"></a>
       <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-menu"><span></span><span></span></button>
       <div class="site-menu" id="site-menu">
         <a class="nav-link" href="index.html">Home</a>
@@ -70,19 +70,37 @@
     <p>Questions about this policy? Email <a href="mailto:techellissoftware@gmail.com">techellissoftware@gmail.com</a>.</p>
   </main>
 
-  <footer class="site-footer page-width"><a class="brand" href="index.html" aria-label="Ellis Software, home"><img class="brand-logo" src="ellis-software-logo-white.png" alt="Ellis Software"></a><nav class="footer-nav" aria-label="Footer navigation"><a class="icon-link" href="index.html" aria-label="Home" data-tooltip="Home"><i data-lucide="house" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Home</span></a><a class="icon-link" href="index.html#work" aria-label="Selected work" data-tooltip="Selected work"><i data-lucide="briefcase-business" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Selected work</span></a><a class="icon-link" href="contact.html" aria-label="Contact" data-tooltip="Contact"><i data-lucide="contact" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Contact</span></a></nav><nav class="legal-nav" aria-label="Legal"><a href="privacy.html" aria-current="page">Privacy policy</a><a href="terms-of-service.html">Terms of service</a></nav><span>© <span data-year></span> Ellis Software</span></footer>
+  <footer class="site-footer page-width"><a class="brand" href="index.html" aria-label="Ellis Software, home"><img class="brand-logo" src="ellis-software-logo.png" alt="Ellis Software"></a><nav class="footer-nav" aria-label="Footer navigation"><a class="icon-link" href="index.html" aria-label="Home" data-tooltip="Home"><i data-lucide="house" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Home</span></a><a class="icon-link" href="index.html#work" aria-label="Selected work" data-tooltip="Selected work"><i data-lucide="briefcase-business" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Selected work</span></a><a class="icon-link" href="contact.html" aria-label="Contact" data-tooltip="Contact"><i data-lucide="contact" aria-hidden="true"></i><span class="icon-tooltip" aria-hidden="true">Contact</span></a></nav><nav class="legal-nav" aria-label="Legal"><a href="privacy.html" aria-current="page">Privacy policy</a><a href="terms-of-service.html">Terms of service</a></nav><span>© <span data-year></span> Ellis Software</span></footer>
   <a class="connect-blob" href="contact.html" aria-label="Connect with Ellis Software">
     <span class="connect-message" role="status" aria-live="polite" aria-atomic="true"></span>
-    <svg class="connect-blob-art" viewBox="0 0 80 70" role="img" aria-label="Connect the blob">
-      <path class="connect-blob-body" d="M10 40C5 29 11 18 20 17C24 5 38 7 44 14C55 8 67 15 67 27C79 33 76 48 67 53C64 65 51 66 43 61C32 69 18 62 18 55C11 53 7 47 10 40Z"/>
-      <ellipse cx="29" cy="33" rx="8" ry="10" fill="#fffdf8"/>
-      <ellipse cx="52" cy="32" rx="8" ry="10" fill="#fffdf8"/>
-      <circle class="connect-pupil" cx="31" cy="35" r="3.5"/>
-      <circle class="connect-pupil" cx="54" cy="34" r="3.5"/>
-      <path d="M38 46Q42 50 46 45" fill="none" stroke="#28271f" stroke-linecap="round" stroke-width="2.5"/>
-      <circle cx="18" cy="44" r="3" fill="#e69aa9" opacity=".8"/>
-      <circle cx="61" cy="43" r="3" fill="#e69aa9" opacity=".8"/>
-    </svg>
+    <span class="connect-blob-art" role="img" aria-label="Connect the blob">
+      <span class="connect-blob-liquid">
+        <span class="connect-blob-bulge connect-blob-bulge-top"></span>
+        <span class="connect-blob-bulge connect-blob-bulge-right"></span>
+        <span class="connect-blob-bulge connect-blob-bulge-bottom"></span>
+        <span class="connect-blob-bulge connect-blob-bulge-left"></span>
+        <span class="connect-blob-gloss">
+          <span class="connect-highlight-line connect-highlight-line-one"></span>
+          <span class="connect-highlight-line connect-highlight-line-two"></span>
+          <span class="connect-highlight-line connect-highlight-line-three"></span>
+        </span>
+      </span>
+      <svg class="connect-blob-face" viewBox="0 0 130 104" aria-hidden="true">
+        <defs>
+          <filter id="connect-goo" x="-35%" y="-35%" width="170%" height="170%">
+            <feTurbulence type="fractalNoise" baseFrequency=".025 .035" numOctaves="2" seed="7" result="water-noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="water-noise" scale="3" xChannelSelector="R" yChannelSelector="G" result="fluid-edge"/>
+            <feGaussianBlur in="fluid-edge" stdDeviation="3.5" result="soft-liquid"/>
+            <feColorMatrix in="soft-liquid" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"/>
+          </filter>
+        </defs>
+        <ellipse cx="45" cy="52" rx="8" ry="10" fill="#fff"/>
+        <ellipse cx="73" cy="53" rx="8" ry="10" fill="#fff"/>
+        <circle class="connect-pupil" cx="46" cy="54" r="3.2"/>
+        <circle class="connect-pupil" cx="74" cy="55" r="3.2"/>
+        <path d="M50 69Q58 74 66 68" fill="none" stroke="#18172a" stroke-linecap="round" stroke-width="2.8"/>
+      </svg>
+    </span>
     <span class="connect-blob-label">Connect</span>
   </a>
   <script src="script.js" defer></script>
