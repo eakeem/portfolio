@@ -141,6 +141,7 @@ h1, h2 { font-family: var(--display); font-weight: 500; letter-spacing: 0; }
 .project-card:nth-child(2) { transition-delay: .08s; }
 .project-card:nth-child(3) { transition-delay: .16s; }
 .connect-blob { position: fixed; z-index: 20; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; color: var(--brand-mint); transform: translate3d(var(--connect-x, calc(100vw - 92px)), var(--connect-y, calc(100vh - 90px)), 0) rotate(var(--connect-tilt, 0deg)); transition: transform 2.4s cubic-bezier(.2,.72,.24,1); }
+.connect-blob.is-hidden-over-games { opacity: 0; visibility: hidden; pointer-events: none; }
 .connect-blob-art { display: block; width: 78px; height: 72px; overflow: visible; filter: drop-shadow(0 12px 18px rgba(63, 38, 112, 0.35)); animation: connect-float 3s ease-in-out infinite; transform-origin: center; }
 .connect-blob-body { fill: url(#connect-gradient); stroke: rgba(136,249,192,0.55); stroke-width: 1.6; }
 .connect-pupil { fill: #090d18; transform: translate(var(--connect-look-x, 0px), var(--connect-look-y, 0px)); transform-box: fill-box; transform-origin: center; transition: transform .12s ease-out; }
@@ -419,3 +420,67 @@ body {
 .menu-toggle span { background: #363831; }
 .site-menu { border-color: #e5e6df; background: rgb(255 255 255 / 98%); box-shadow: 0 12px 32px rgb(35 38 31 / 10%); }
 .nav-link { border-bottom-color: #edeee8; }
+
+.pong-card { flex-basis: min(100%, 420px); }
+.pong-cover { position: relative; display: flex; min-height: 212px; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 18px 20px 15px; background: radial-gradient(ellipse at 50% 50%, rgb(115 80 162 / 30%), transparent 58%), linear-gradient(135deg, #10152f, #17113c 56%, #10152f); color: #fff; isolation: isolate; }
+.pong-cover::before, .pong-cover::after { position: absolute; z-index: -1; border: 1px solid rgb(255 255 255 / 11%); border-radius: 50%; content: ''; pointer-events: none; }
+.pong-cover::before { width: 250px; height: 250px; top: -150px; left: -68px; box-shadow: 0 0 0 24px rgb(255 255 255 / 3%), 0 0 0 48px rgb(255 255 255 / 2%); }
+.pong-cover::after { width: 230px; height: 230px; right: -110px; bottom: -156px; box-shadow: 0 0 0 24px rgb(255 255 255 / 3%), 0 0 0 48px rgb(255 255 255 / 2%); }
+.pong-cover-kicker, .pong-cover-edition { color: #d7c6f3; font-size: 8px; font-weight: 700; letter-spacing: .2em; }
+.pong-cover-title { z-index: 1; display: flex; flex-direction: column; font-size: clamp(24px, 6vw, 39px); font-weight: 700; letter-spacing: -.055em; line-height: .94; text-shadow: 0 4px 20px rgb(0 0 0 / 35%); }
+.pong-cover-title b { margin-top: 5px; color: #e5c7ff; font-size: .73em; letter-spacing: .13em; }
+.pong-cover-court { position: absolute; inset: 30px 19px 27px 55%; display: block; border: 1px solid rgb(255 255 255 / 35%); border-radius: 8px; background: linear-gradient(90deg, transparent 49.5%, rgb(255 255 255 / 25%) 49.5%, rgb(255 255 255 / 25%) 50.5%, transparent 50.5%); box-shadow: inset 0 0 28px rgb(139 92 246 / 17%); transform: perspective(360px) rotateY(-12deg); }
+.pong-cover-paddle { position: absolute; top: 50%; width: 7px; height: 42px; border-radius: 99px; transform: translateY(-50%); }
+.pong-cover-paddle-player { left: 10px; background: linear-gradient(#22c55e 0 33%, #facc15 33% 66%, #22c55e 66%); box-shadow: 0 0 12px rgb(34 197 94 / 55%); }
+.pong-cover-paddle-cpu { right: 10px; background: linear-gradient(#e5e7eb 0 33%, #818cf8 33% 66%, #e5e7eb 66%); box-shadow: 0 0 12px rgb(129 140 248 / 55%); }
+.pong-cover-ball { position: absolute; top: 33%; left: 58%; width: 10px; height: 10px; border-radius: 50%; background: #fff; box-shadow: 0 0 9px 3px rgb(255 255 255 / 65%), -23px 13px 0 -3px rgb(216 180 254 / 65%); }
+.pong-store-badges { display: flex; flex-wrap: wrap; gap: 7px; }
+.pong-store-badges span { display: inline-flex; min-height: 38px; flex-direction: column; justify-content: center; gap: 2px; padding: 5px 10px; border: 1px solid #e6deed; border-radius: 9px; background: #f8f4ed; }
+.pong-store-badges small { color: #777065; font-size: 8px; line-height: 1; }
+.pong-store-badges b { color: var(--brand-indigo); font-size: 10px; font-weight: 700; line-height: 1.1; }
+.pong-meta { align-items: stretch; gap: 10px; }
+.pong-score { display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--brand-indigo); font-size: 13px; font-weight: 500; }
+.pong-score b { margin-left: 4px; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pong-country-badge { display: inline-flex; align-items: center; gap: 4px; margin-left: 3px; padding: 2px 6px; border: 1px solid #ded5c7; border-radius: 999px; background: #f8f4ed; color: var(--brand-indigo); font-size: 8px; font-weight: 700; line-height: 1.2; text-transform: uppercase; vertical-align: 1px; }
+.pong-country-badge i { display: inline-block; width: 15px; height: 9px; border: 1px solid rgb(40 39 31 / 14%); border-radius: 2px; background: #ddd; }
+.pong-score-divider { color: #a9a092; }
+.pong-court { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid #d8d1e2; border-radius: 12px; outline: none; background: #10152f; touch-action: none; }
+.pong-court:focus-visible { outline: 2px solid var(--brand-violet); outline-offset: 3px; }
+.pong-status { min-height: 18px; color: #777065; font-size: 11px; text-align: center; }
+.pong-controls { display: flex; justify-content: center; gap: 9px; }
+.pong-button { min-height: 38px; cursor: pointer; font-family: var(--sans); }
+.pong-reset { border-color: #ded5c7; background: transparent; }
+@media (max-width: 600px) {
+  .pong-card { flex-basis: min(88vw, 420px); }
+  .pong-cover { min-height: 190px; padding: 16px 17px 13px; }
+  .pong-cover-court { inset: 29px 16px 24px 55%; }
+  .pong-meta { padding: 14px; }
+}
+.games-project-grid { display: grid; grid-template-columns: min(100%, 500px); justify-content: center; overflow: visible; padding: 2px 0; scroll-snap-type: none; scrollbar-width: none; }
+.games-project-grid::-webkit-scrollbar { display: none; }
+.games-project-grid .pong-card { width: 100%; max-width: 500px; }
+.pong-launch-meta { align-items: flex-start; }
+.pong-launch-meta .pong-button { margin-top: 3px; }
+.pong-dialog { width: min(620px, calc(100% - 32px)); max-width: none; max-height: calc(100% - 32px); padding: 0; overflow: auto; border: 1px solid #ded5c7; border-radius: 20px; background: #fffdf8; color: var(--ink); box-shadow: 0 24px 80px rgb(22 24 40 / 28%); }
+.pong-dialog::backdrop { background: rgb(18 20 34 / 58%); backdrop-filter: blur(4px); }
+.pong-dialog-content { display: flex; flex-direction: column; gap: 12px; padding: clamp(18px, 4vw, 28px); }
+.pong-dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.pong-dialog-heading h3 { margin: 5px 0 0; font-size: 24px; }
+.pong-close { display: grid; width: 38px; height: 38px; flex: 0 0 38px; place-items: center; padding: 0 0 3px; border: 1px solid #ded5c7; border-radius: 50%; background: transparent; color: var(--brand-indigo); cursor: pointer; font-size: 27px; line-height: 1; }
+.pong-close:hover, .pong-close:focus-visible { background: #eee8f5; }
+.pong-instructions { margin: 0; color: #777065; font-size: 12px; line-height: 1.6; }
+.pong-settings { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 0; padding: 0; border: 0; }
+.pong-settings label { display: grid; flex: 1 1 180px; gap: 5px; color: #777065; font-size: 10px; font-weight: 600; }
+.pong-settings select { width: 100%; min-height: 38px; padding: 0 34px 0 11px; border: 1px solid #ded5c7; border-radius: 9px; background: #fff; color: var(--brand-indigo); font: 500 12px var(--sans); }
+.pong-settings select:focus-visible { outline: 2px solid var(--brand-violet); outline-offset: 2px; }
+.pong-settings:disabled { opacity: .58; }
+.pong-dialog .pong-meta { gap: 10px; padding: 0; }
+.pong-dialog .pong-status { margin: 0; }
+.pong-powerup-help { margin: 0; padding: 10px 12px; border: 1px solid #e8e1d7; border-radius: 10px; background: #f8f4ed; color: #777065; font-size: 10px; line-height: 1.6; }
+.pong-powerup-help strong { color: var(--brand-indigo); }
+@media (max-width: 600px) {
+  .pong-dialog { width: calc(100% - 24px); max-height: calc(100% - 24px); border-radius: 16px; }
+  .pong-dialog-content { gap: 10px; padding: 16px; }
+  .pong-settings { gap: 8px; }
+  .pong-settings label { flex-basis: 135px; }
+}

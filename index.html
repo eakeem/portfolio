@@ -146,16 +146,81 @@
     </section>
 
     <section class="work-section page-width catalog-section" id="games" aria-labelledby="games-title">
-      <div class="section-heading reveal"><div><p class="eyebrow">Playful things are on the way</p><h2 id="games-title">Games<span class="heading-period">.</span></h2></div><span class="section-count">COMING SOON</span></div>
-      <div class="project-grid" role="region" aria-label="Games projects" tabindex="0">
-        <article class="project-card coming-soon-card reveal">
-          <div class="project-meta">
-            <span class="project-type">Coming soon</span>
-            <h3>Games</h3>
-            <p>New games and interactive experiments are on the way.</p>
+      <div class="section-heading reveal"><div><p class="eyebrow">Take a quick break</p><h2 id="games-title">Games<span class="heading-period">.</span></h2></div><span class="section-count">PLAYABLE DEMO</span></div>
+      <div class="project-grid games-project-grid" role="region" aria-label="Games projects">
+        <article class="project-card pong-card reveal">
+          <div class="pong-cover" role="img" aria-label="Pong Unleashed arcade cover art">
+            <span class="pong-cover-kicker">ELLIS SOFTWARE ORIGINAL</span>
+            <span class="pong-cover-title">PONG <b>UNLEASHED</b></span>
+            <span class="pong-cover-court" aria-hidden="true">
+              <i class="pong-cover-paddle pong-cover-paddle-player"></i>
+              <i class="pong-cover-paddle pong-cover-paddle-cpu"></i>
+              <i class="pong-cover-ball"></i>
+            </span>
+            <span class="pong-cover-edition">POWER UP. PLAY ON.</span>
+          </div>
+          <div class="project-meta pong-launch-meta">
+            <span class="project-type">Arcade Pong · customizable matches</span>
+            <h3>Pong Unleashed</h3>
+            <p>Pick your country, collect power-ups, and challenge the computer.</p>
+            <div class="pong-store-badges" aria-label="Coming soon to Google Play and iOS">
+              <span><small>Coming soon</small><b>Google Play</b></span>
+              <span><small>Coming soon</small><b>iOS</b></span>
+            </div>
+            <button class="project-link pong-button" type="button" data-pong-open>Play Pong</button>
           </div>
         </article>
       </div>
+      <dialog class="pong-dialog" data-pong-dialog aria-labelledby="pong-dialog-title">
+        <div class="pong-dialog-content">
+          <div class="pong-dialog-heading">
+            <div>
+              <span class="project-type">Arcade classic · customize your match</span>
+              <h3 id="pong-dialog-title">Pong Unleashed</h3>
+            </div>
+            <button class="pong-close" type="button" data-pong-close aria-label="Close Pong game">×</button>
+          </div>
+          <p class="pong-instructions">Move your paddle with ↑/↓ or W/S, or move your pointer over the court.</p>
+          <fieldset class="pong-settings" data-pong-settings>
+            <label>
+              <span>Your country</span>
+              <select data-pong-country aria-label="Choose your country colors">
+                <option value="jamaica" selected>Jamaica</option>
+                <option value="usa">United States</option>
+                <option value="brazil">Brazil</option>
+                <option value="france">France</option>
+                <option value="japan">Japan</option>
+                <option value="canada">Canada</option>
+                <option value="argentina">Argentina</option>
+                <option value="germany">Germany</option>
+              </select>
+            </label>
+            <label>
+              <span>Match length</span>
+              <select data-pong-rounds aria-label="Points needed to win">
+                <option value="3">First to 3</option>
+                <option value="5" selected>First to 5</option>
+                <option value="7">First to 7</option>
+                <option value="11">First to 11</option>
+              </select>
+            </label>
+          </fieldset>
+          <div class="pong-meta">
+            <div class="pong-score" aria-label="Score">
+              <span>You <b data-pong-player-score>0</b></span>
+              <span class="pong-score-divider" aria-hidden="true">:</span>
+              <span>CPU <small class="pong-country-badge"><i data-pong-cpu-swatch aria-hidden="true"></i><span data-pong-cpu-country></span></small> <b data-pong-cpu-score>0</b></span>
+            </div>
+            <canvas class="pong-court" data-pong-canvas width="800" height="450" tabindex="0" role="img" aria-label="Pong court. Use the up and down arrow keys or W and S to move your paddle."></canvas>
+            <p class="pong-status" data-pong-status role="status" aria-live="polite">Ready when you are. Start a game to play.</p>
+            <div class="pong-controls">
+              <button class="project-link pong-button" type="button" data-pong-start>Start game</button>
+              <button class="project-link pong-button pong-reset" type="button" data-pong-reset>Reset</button>
+            </div>
+            <p class="pong-powerup-help"><strong>Power-ups:</strong> collect an orb with the ball — F Fire splits it, I Ice freezes CPU, L Lightning speeds it up, + Boost adds paddle size, and 2 Twin adds a second paddle.</p>
+          </div>
+        </div>
+      </dialog>
     </section>
 
     <section class="closing page-width reveal" aria-label="Social and contact links">

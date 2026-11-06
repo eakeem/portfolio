@@ -6,6 +6,14 @@ if (window.lucide?.createIcons) {
 }
 
 const connectBlob = document.querySelector('.connect-blob');
+const gamesSection = document.querySelector('#games');
+if (connectBlob && gamesSection && 'IntersectionObserver' in window) {
+  const gamesObserver = new IntersectionObserver(([entry]) => {
+    connectBlob.classList.toggle('is-hidden-over-games', entry.isIntersecting);
+  }, { threshold: 0.12 });
+  gamesObserver.observe(gamesSection);
+}
+
 if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   let pointerFrame = 0;
   let scrollReset;
@@ -249,6 +257,464 @@ if (menuToggle && siteMenu) {
 document.querySelectorAll('[data-year]').forEach((element) => {
   element.textContent = new Date().getFullYear();
 });
+
+const pongCanvas = document.querySelector('[data-pong-canvas]');
+const pongStartButton = document.querySelector('[data-pong-start]');
+const pongResetButton = document.querySelector('[data-pong-reset]');
+const pongStatus = document.querySelector('[data-pong-status]');
+const pongDialog = document.querySelector('[data-pong-dialog]');
+const pongOpenButton = document.querySelector('[data-pong-open]');
+const pongCloseButton = document.querySelector('[data-pong-close]');
+
+if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog && pongOpenButton && pongCloseButton) {
+  const context = pongCanvas.getContext('2d');
+  const playerScoreElement = document.querySelector('[data-pong-player-score]');
+  const cpuScoreElement = document.querySelector('[data-pong-cpu-score]');
+  const cpuCountryElement = document.querySelector('[data-pong-cpu-country]');
+  const cpuSwatchElement = document.querySelector('[data-pong-cpu-swatch]');
+  const countrySelect = document.querySelector('[data-pong-country]');
+  const roundsSelect = document.querySelector('[data-pong-rounds]');
+  const settingsFieldset = document.querySelector('[data-pong-settings]');
+  const courtWidth = 800;
+  const courtHeight = 450;
+  const paddleWidth = 12;
+  const paddleHeight = 82;
+  const ballRadius = 9;
+  const powerupDuration = 6500;
+  const countryColors = {
+    jamaica: ['#009b3a', '#fcd116', '#111111', '#fcd116', '#009b3a'],
+    usa: ['#b22234', '#ffffff', '#3c3b6e', '#ffffff', '#b22234'],
+    brazil: ['#009739', '#ffdf00', '#009739'],
+    france: ['#0055a4', '#ffffff', '#ef4135'],
+    japan: ['#ffffff', '#bc002d', '#ffffff'],
+    canada: ['#d80621', '#ffffff', '#d80621'],
+    argentina: ['#75aadb', '#ffffff', '#75aadb'],
+    germany: ['#111111', '#dd0000', '#ffce00']
+  };
+  const countryNames = {
+    jamaica: 'Jamaica',
+    usa: 'USA',
+    brazil: 'Brazil',
+    france: 'France',
+    japan: 'Japan',
+    canada: 'Canada',
+    argentina: 'Argentina',
+    germany: 'Germany'
+  };
+  const powerups = {
+    fire: { label: 'F', name: 'Fire', color: '#f97316' },
+    ice: { label: 'I', name: 'Ice', color: '#38bdf8' },
+    lightning: { label: 'L', name: 'Lightning', color: '#facc15' },
+    boost: { label: '+', name: 'Paddle boost', color: '#a78bfa' },
+    twin: { label: '2', name: 'Twin paddles', color: '#34d399' }
+  };
+  const player = { x: 25, y: courtHeight / 2 };
+  const cpu = { x: courtWidth - 25 - paddleWidth, y: courtHeight / 2 };
+  let balls = [{ x: courtWidth / 2, y: courtHeight / 2, vx: 5, vy: 2 }];
+  let playerScore = 0;
+  let cpuScore = 0;
+  let roundsToWin = Number(roundsSelect?.value) || 5;
+  let playerColors = countryColors[countrySelect?.value] || countryColors.jamaica;
+  let cpuCountry = 'usa';
+  let cpuColors = countryColors[cpuCountry];
+  let active = false;
+  let finished = false;
+  let animationFrame = 0;
+  let previousFrame = 0;
+  let powerupDrop = null;
+  let nextPowerupAt = performance.now() + 3000;
+  let cpuFrozenUntil = 0;
+  let playerBoostUntil = 0;
+  let twinPaddlesUntil = 0;
+  let lightningUntil = 0;
+  let lightningActive = false;
+
+  const clampPaddle = (paddle) => {
+    const height = paddle.height || paddleHeight;
+    paddle.y = Math.max(height / 2, Math.min(courtHeight - height / 2, paddle.y));
+  };
+
+  const resetPowerups = () => {
+    powerupDrop = null;
+    nextPowerupAt = performance.now() + 3000;
+    cpuFrozenUntil = 0;
+    playerBoostUntil = 0;
+    twinPaddlesUntil = 0;
+    lightningUntil = 0;
+    lightningActive = false;
+  };
+
+  const setSettingsLocked = (locked) => {
+    if (settingsFieldset) settingsFieldset.disabled = locked;
+  };
+
+  const randomizeCpuCountry = () => {
+    const availableCountries = Object.keys(countryColors).filter((country) => country !== countrySelect?.value);
+    cpuCountry = availableCountries[Math.floor(Math.random() * availableCountries.length)] || 'usa';
+    cpuColors = countryColors[cpuCountry];
+    if (cpuCountryElement) cpuCountryElement.textContent = countryNames[cpuCountry];
+    if (cpuSwatchElement) cpuSwatchElement.style.background = `linear-gradient(90deg, ${cpuColors.join(', ')})`;
+  };
+
+  const resizeCanvas = () => {
+    const bounds = pongCanvas.getBoundingClientRect();
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    pongCanvas.width = Math.round(bounds.width * pixelRatio);
+    pongCanvas.height = Math.round(bounds.height * pixelRatio);
+    context.setTransform(pongCanvas.width / courtWidth, 0, 0, pongCanvas.height / courtHeight, 0, 0);
+    draw();
+  };
+
+  const drawPaddle = (paddle, colors, height) => {
+    const palette = Array.isArray(colors) ? colors : [colors];
+    const paddleHeightNow = height || paddleHeight;
+    const top = paddle.y - paddleHeightNow / 2;
+    context.save();
+    context.beginPath();
+    context.rect(paddle.x, top, paddleWidth, paddleHeightNow);
+    context.clip();
+    context.shadowColor = palette[0];
+    context.shadowBlur = 14;
+    const stripeHeight = paddleHeightNow / palette.length;
+    palette.forEach((color, index) => {
+      context.fillStyle = color;
+      context.fillRect(paddle.x - 3, top + stripeHeight * index, paddleWidth + 6, stripeHeight + 1);
+    });
+    context.restore();
+  };
+
+  const draw = () => {
+    if (!context) return;
+    context.clearRect(0, 0, courtWidth, courtHeight);
+    context.fillStyle = '#10152f';
+    context.fillRect(0, 0, courtWidth, courtHeight);
+    context.strokeStyle = 'rgba(255,255,255,.2)';
+    context.lineWidth = 3;
+    context.setLineDash([10, 12]);
+    context.beginPath();
+    context.moveTo(courtWidth / 2, 18);
+    context.lineTo(courtWidth / 2, courtHeight - 18);
+    context.stroke();
+    context.setLineDash([]);
+    const now = performance.now();
+    const playerHeight = now < playerBoostUntil ? paddleHeight * 1.55 : paddleHeight;
+    drawPaddle(player, playerColors, playerHeight);
+    if (now < twinPaddlesUntil) {
+      const secondY = player.y < courtHeight / 2
+        ? Math.min(player.y + 104, courtHeight - paddleHeight / 2)
+        : Math.max(player.y - 104, paddleHeight / 2);
+      drawPaddle({ x: player.x + 18, y: secondY }, playerColors, paddleHeight * .82);
+    }
+    drawPaddle(cpu, now < cpuFrozenUntil ? ['#dff8ff', '#38bdf8', '#dff8ff'] : cpuColors);
+    if (now < cpuFrozenUntil) {
+      context.fillStyle = '#b9efff';
+      context.font = '700 12px DM Sans, sans-serif';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText('FROZEN', cpu.x + paddleWidth / 2, cpu.y - paddleHeight / 2 - 13);
+    }
+    balls.forEach((ball) => {
+      context.beginPath();
+      context.fillStyle = '#fffdf8';
+      context.shadowColor = '#fffdf8';
+      context.shadowBlur = 16;
+      context.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.shadowBlur = 0;
+
+    if (powerupDrop) {
+      const powerup = powerups[powerupDrop.type];
+      context.beginPath();
+      context.fillStyle = powerup.color;
+      context.shadowColor = powerup.color;
+      context.shadowBlur = 22;
+      context.arc(powerupDrop.x, powerupDrop.y, 16, 0, Math.PI * 2);
+      context.fill();
+      context.shadowBlur = 0;
+      context.fillStyle = '#10152f';
+      context.font = '700 15px DM Sans, sans-serif';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText(powerup.label, powerupDrop.x, powerupDrop.y + 1);
+    }
+
+    if (!active) {
+      context.fillStyle = 'rgba(16,21,47,.52)';
+      context.fillRect(0, 0, courtWidth, courtHeight);
+      context.fillStyle = '#fffdf8';
+      context.font = '600 23px DM Sans, sans-serif';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText(finished ? (playerScore >= roundsToWin ? 'YOU WIN!' : 'CPU WINS') : 'PONG', courtWidth / 2, courtHeight / 2);
+    }
+  };
+
+  const updateScore = () => {
+    if (playerScoreElement) playerScoreElement.textContent = String(playerScore);
+    if (cpuScoreElement) cpuScoreElement.textContent = String(cpuScore);
+  };
+
+  const serveBall = (direction) => {
+    balls = [{
+      x: courtWidth / 2,
+      y: courtHeight / 2,
+      vx: 5 * direction,
+      vy: Math.random() < .5 ? -2 : 2
+    }];
+  };
+
+  const finishPoint = (scorer) => {
+    if (scorer === 'player') {
+      playerScore += 1;
+      pongStatus.textContent = `Point for you! ${playerScore} to ${cpuScore}.`;
+      serveBall(1);
+    } else {
+      cpuScore += 1;
+      pongStatus.textContent = `Point for CPU. ${playerScore} to ${cpuScore}.`;
+      serveBall(-1);
+    }
+    resetPowerups();
+    updateScore();
+
+    if (playerScore >= roundsToWin || cpuScore >= roundsToWin) {
+      active = false;
+      finished = true;
+      pongStartButton.textContent = 'Play again';
+      setSettingsLocked(false);
+      pongStatus.textContent = playerScore >= roundsToWin ? 'You win! Play again?' : 'CPU wins this round. Try again?';
+    }
+    draw();
+  };
+
+  const activatePowerup = (type, timestamp, ball) => {
+    const powerup = powerups[type];
+    if (type === 'fire' && balls.length < 4) {
+      const direction = ball.vy >= 0 ? 1 : -1;
+      balls.push(
+        { x: ball.x, y: ball.y, vx: ball.vx, vy: ball.vy + (3 * direction) },
+        { x: ball.x, y: ball.y, vx: ball.vx, vy: ball.vy - (3 * direction) }
+      );
+      if (balls.length > 4) balls.length = 4;
+    } else if (type === 'ice') {
+      cpuFrozenUntil = timestamp + powerupDuration;
+    } else if (type === 'lightning') {
+      if (!lightningActive) balls.forEach((currentBall) => {
+        currentBall.vx *= 1.55;
+        currentBall.vy *= 1.55;
+      });
+      lightningActive = true;
+      lightningUntil = timestamp + powerupDuration;
+    } else if (type === 'boost') {
+      playerBoostUntil = timestamp + powerupDuration;
+    } else if (type === 'twin') {
+      twinPaddlesUntil = timestamp + powerupDuration;
+    }
+    pongStatus.textContent = `${powerup.name} power-up!`;
+    powerupDrop = null;
+    nextPowerupAt = timestamp + 3500 + Math.random() * 2500;
+  };
+
+  const checkPaddleHit = (ball, paddle, height, direction, timestamp) => {
+    if (direction < 0 && ball.vx >= 0) return false;
+    if (direction > 0 && ball.vx <= 0) return false;
+    const paddleTop = paddle.y - height / 2;
+    const paddleRight = paddle.x + paddleWidth;
+    if (ball.y < paddleTop || ball.y > paddleTop + height) return false;
+    if (direction < 0 && ball.x - ballRadius > paddleRight) return false;
+    if (direction > 0 && ball.x + ballRadius < paddle.x) return false;
+
+    ball.x = direction < 0 ? paddleRight + ballRadius : paddle.x - ballRadius;
+    ball.vx = Math.sign(-direction) * Math.min(Math.abs(ball.vx) * 1.04, 8);
+    ball.vy += ((ball.y - paddle.y) / (height / 2)) * 1.6;
+    if (powerupDrop && Math.hypot(ball.x - powerupDrop.x, ball.y - powerupDrop.y) < 30) {
+      activatePowerup(powerupDrop.type, timestamp, ball);
+    }
+    return true;
+  };
+
+  const animate = (timestamp) => {
+    animationFrame = 0;
+    if (!active) {
+      return;
+    }
+    const frameScale = Math.min((timestamp - previousFrame) / (1000 / 60), 2);
+    previousFrame = timestamp;
+
+    if (lightningActive && timestamp >= lightningUntil) {
+      balls.forEach((ball) => {
+        ball.vx /= 1.55;
+        ball.vy /= 1.55;
+      });
+      lightningActive = false;
+    }
+
+    if (!powerupDrop && timestamp >= nextPowerupAt) {
+      const types = Object.keys(powerups);
+      powerupDrop = {
+        x: courtWidth / 2 + (Math.random() - .5) * 180,
+        y: 65 + Math.random() * (courtHeight - 130),
+        type: types[Math.floor(Math.random() * types.length)]
+      };
+    }
+
+    let pointScored = false;
+    balls.forEach((ball) => {
+      if (pointScored) return;
+      ball.x += ball.vx * frameScale;
+      ball.y += ball.vy * frameScale;
+      if (ball.y - ballRadius <= 0 || ball.y + ballRadius >= courtHeight) {
+        ball.vy *= -1;
+        ball.y = Math.max(ballRadius, Math.min(courtHeight - ballRadius, ball.y));
+      }
+
+      const playerHeight = timestamp < playerBoostUntil ? paddleHeight * 1.55 : paddleHeight;
+      let playerHit = checkPaddleHit(ball, player, playerHeight, -1, timestamp);
+      if (!playerHit && timestamp < twinPaddlesUntil) {
+        const secondY = player.y < courtHeight / 2
+          ? Math.min(player.y + 104, courtHeight - paddleHeight / 2)
+          : Math.max(player.y - 104, paddleHeight / 2);
+        playerHit = checkPaddleHit(ball, { x: player.x + 18, y: secondY }, paddleHeight * .82, -1, timestamp);
+      }
+      if (!playerHit) checkPaddleHit(ball, cpu, paddleHeight, 1, timestamp);
+
+      if (powerupDrop && Math.hypot(ball.x - powerupDrop.x, ball.y - powerupDrop.y) < ballRadius + 16) {
+        activatePowerup(powerupDrop.type, timestamp, ball);
+      }
+
+      if (ball.x + ballRadius < 0) {
+        finishPoint('cpu');
+        pointScored = true;
+      } else if (ball.x - ballRadius > courtWidth) {
+        finishPoint('player');
+        pointScored = true;
+      }
+    });
+
+    if (timestamp >= cpuFrozenUntil) {
+      const incomingBall = balls.reduce((nearest, ball) =>
+        ball.vx > 0 && (!nearest || ball.x > nearest.x) ? ball : nearest, null);
+      if (incomingBall) {
+        const cpuDifference = incomingBall.y - cpu.y;
+        cpu.y += Math.sign(cpuDifference) * Math.min(Math.abs(cpuDifference), 3.3 * frameScale);
+      }
+    }
+    clampPaddle(cpu);
+    clampPaddle(player);
+
+    draw();
+    if (active) animationFrame = window.requestAnimationFrame(animate);
+  };
+
+  const startAnimation = () => {
+    previousFrame = performance.now();
+    if (!animationFrame) animationFrame = window.requestAnimationFrame(animate);
+  };
+
+  const pauseGame = () => {
+    if (!active) return;
+    active = false;
+    setSettingsLocked(false);
+    pongStartButton.textContent = 'Resume game';
+    pongStatus.textContent = 'Game paused.';
+    draw();
+  };
+
+  const movePlayerToPointer = (event) => {
+    if (!active) return;
+    const bounds = pongCanvas.getBoundingClientRect();
+    player.y = ((event.clientY - bounds.top) / bounds.height) * courtHeight;
+    clampPaddle(player);
+    draw();
+  };
+
+  pongStartButton.addEventListener('click', () => {
+    if (active) {
+      pauseGame();
+      return;
+    }
+    const newMatch = finished || (pongStartButton.textContent === 'Start game' && playerScore === 0 && cpuScore === 0);
+    if (newMatch) {
+      playerScore = 0;
+      cpuScore = 0;
+      finished = false;
+      resetPowerups();
+      player.y = courtHeight / 2;
+      cpu.y = courtHeight / 2;
+      updateScore();
+      serveBall(1);
+      randomizeCpuCountry();
+    }
+    active = true;
+    setSettingsLocked(true);
+    pongStartButton.textContent = 'Pause game';
+    pongStatus.textContent = 'Game on! Move your paddle to return the ball.';
+    draw();
+    startAnimation();
+  });
+
+  pongResetButton.addEventListener('click', () => {
+    active = false;
+    finished = false;
+    setSettingsLocked(false);
+    playerScore = 0;
+    cpuScore = 0;
+    player.y = courtHeight / 2;
+    cpu.y = courtHeight / 2;
+    resetPowerups();
+    randomizeCpuCountry();
+    serveBall(1);
+    updateScore();
+    pongStartButton.textContent = 'Start game';
+    pongStatus.textContent = 'Ready when you are. Start a game to play.';
+    draw();
+  });
+
+  pongCanvas.addEventListener('pointermove', movePlayerToPointer);
+  pongCanvas.addEventListener('pointerdown', (event) => {
+    pongCanvas.focus();
+    movePlayerToPointer(event);
+  });
+  pongCanvas.addEventListener('keydown', (event) => {
+    if (!active) return;
+    if (event.key === 'ArrowUp' || event.key.toLowerCase() === 'w') {
+      event.preventDefault();
+      player.y -= 24;
+    } else if (event.key === 'ArrowDown' || event.key.toLowerCase() === 's') {
+      event.preventDefault();
+      player.y += 24;
+    } else {
+      return;
+    }
+    clampPaddle(player);
+    draw();
+  });
+  countrySelect?.addEventListener('change', () => {
+    playerColors = countryColors[countrySelect.value] || countryColors.jamaica;
+    if (countrySelect.value === cpuCountry) randomizeCpuCountry();
+    draw();
+  });
+  roundsSelect?.addEventListener('change', () => {
+    roundsToWin = Number(roundsSelect.value) || 5;
+    pongStatus.textContent = `Match set to first to ${roundsToWin}.`;
+    draw();
+  });
+  pongOpenButton.addEventListener('click', () => {
+    pongDialog.showModal();
+    resizeCanvas();
+    pongStartButton.focus();
+  });
+  pongCloseButton.addEventListener('click', () => {
+    pauseGame();
+    pongDialog.close();
+    pongOpenButton.focus();
+  });
+  pongDialog.addEventListener('cancel', pauseGame);
+  randomizeCpuCountry();
+  window.addEventListener('resize', () => {
+    if (pongDialog.open) resizeCanvas();
+  }, { passive: true });
+}
 
 const revealItems = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window) {
