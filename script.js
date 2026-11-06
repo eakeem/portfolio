@@ -6,14 +6,6 @@ if (window.lucide?.createIcons) {
 }
 
 const connectBlob = document.querySelector('.connect-blob');
-const gamesSection = document.querySelector('#games');
-if (connectBlob && gamesSection && 'IntersectionObserver' in window) {
-  const gamesObserver = new IntersectionObserver(([entry]) => {
-    connectBlob.classList.toggle('is-hidden-over-games', entry.isIntersecting);
-  }, { threshold: 0.12 });
-  gamesObserver.observe(gamesSection);
-}
-
 if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   let pointerFrame = 0;
   let scrollReset;
@@ -47,6 +39,8 @@ if (connectBlob && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
 
   const getSectionMessage = (target, index) => {
     if (target.matches('.hero')) return 'Welcome! I build thoughtful things for the web.';
+    if (target.id === 'automation') return 'Automation that keeps the busywork moving. Take a look at what’s in development.';
+    if (target.id === 'games') return 'Take a quick break and try Pong Unleashed. Pick your country and power up!';
     if (target.matches('.work-section')) return 'A few recent projects I’m proud of.';
     if (target.matches('.approach-band')) return 'Thoughtful design, sturdy code.';
     if (target.matches('.closing')) return 'Find me on your favorite platform, or say hello directly.';
