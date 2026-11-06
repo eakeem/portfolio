@@ -175,12 +175,12 @@
         <div class="pong-dialog-content">
           <div class="pong-dialog-heading">
             <div>
-              <span class="project-type">Arcade classic · customize your match</span>
+              <span class="project-type">Arcade Pong · customize your match</span>
               <h3 id="pong-dialog-title">Pong Unleashed</h3>
             </div>
             <button class="pong-close" type="button" data-pong-close aria-label="Close Pong game">×</button>
           </div>
-          <p class="pong-instructions">Move your paddle with ↑/↓ or W/S, or move your pointer over the court.</p>
+          <p class="pong-instructions"><span class="pong-desktop-instructions">Move with ↑/↓ or W/S, or move your pointer over the court.</span><span class="pong-mobile-instructions">Use the slider to move your paddle.</span></p>
           <fieldset class="pong-settings" data-pong-settings>
             <label>
               <span>Your country</span>
@@ -211,13 +211,22 @@
               <span class="pong-score-divider" aria-hidden="true">:</span>
               <span>CPU <small class="pong-country-badge"><i data-pong-cpu-swatch aria-hidden="true"></i><span data-pong-cpu-country></span></small> <b data-pong-cpu-score>0</b></span>
             </div>
-            <canvas class="pong-court" data-pong-canvas width="800" height="450" tabindex="0" role="img" aria-label="Pong court. Use the up and down arrow keys or W and S to move your paddle."></canvas>
+            <div class="pong-court-frame">
+              <canvas class="pong-court" data-pong-canvas width="800" height="450" tabindex="0" role="img" aria-label="Pong court. On mobile, use the paddle slider; on desktop, use the pointer or arrow keys."></canvas>
+            </div>
+            <label class="pong-paddle-control" for="pong-paddle-slider">
+              <span>Move your paddle</span>
+              <input id="pong-paddle-slider" data-pong-paddle-slider type="range" min="0" max="1000" value="500" aria-label="Move your paddle left and right">
+            </label>
             <p class="pong-status" data-pong-status role="status" aria-live="polite">Ready when you are. Start a game to play.</p>
             <div class="pong-controls">
               <button class="project-link pong-button" type="button" data-pong-start>Start game</button>
               <button class="project-link pong-button pong-reset" type="button" data-pong-reset>Reset</button>
             </div>
-            <p class="pong-powerup-help"><strong>Power-ups:</strong> collect an orb with the ball — F Fire splits it, I Ice freezes CPU, L Lightning speeds it up, + Boost adds paddle size, and 2 Twin adds a second paddle.</p>
+            <details class="pong-powerup-help">
+              <summary>Power-up guide</summary>
+              <p><strong>Power-ups:</strong> collect an orb with the ball — F Fire splits it, I Ice freezes CPU, L Lightning speeds it up, + Boost adds paddle size, and 2 Twin adds a second paddle.</p>
+            </details>
           </div>
         </div>
       </dialog>

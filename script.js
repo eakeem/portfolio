@@ -272,6 +272,7 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
   const cpuScoreElement = document.querySelector('[data-pong-cpu-score]');
   const cpuCountryElement = document.querySelector('[data-pong-cpu-country]');
   const cpuSwatchElement = document.querySelector('[data-pong-cpu-swatch]');
+  const paddleSlider = document.querySelector('[data-pong-paddle-slider]');
   const countrySelect = document.querySelector('[data-pong-country]');
   const roundsSelect = document.querySelector('[data-pong-rounds]');
   const settingsFieldset = document.querySelector('[data-pong-settings]');
@@ -281,6 +282,7 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
   const paddleHeight = 82;
   const ballRadius = 9;
   const powerupDuration = 6500;
+  const isMobileCourt = () => window.matchMedia('(max-width: 600px)').matches;
   const countryColors = {
     jamaica: ['#009b3a', '#fcd116', '#111111', '#fcd116', '#009b3a'],
     usa: ['#b22234', '#ffffff', '#3c3b6e', '#ffffff', '#b22234'],
@@ -334,6 +336,14 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
     paddle.y = Math.max(height / 2, Math.min(courtHeight - height / 2, paddle.y));
   };
 
+  const setPlayerPosition = (y) => {
+    player.y = y;
+    clampPaddle(player);
+    if (paddleSlider) {
+      paddleSlider.value = String(Math.round((1 - player.y / courtHeight) * 1000));
+    }
+  };
+
   const resetPowerups = () => {
     powerupDrop = null;
     nextPowerupAt = performance.now() + 3000;
@@ -361,7 +371,6 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
     const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
     pongCanvas.width = Math.round(bounds.width * pixelRatio);
     pongCanvas.height = Math.round(bounds.height * pixelRatio);
-    context.setTransform(pongCanvas.width / courtWidth, 0, 0, pongCanvas.height / courtHeight, 0, 0);
     draw();
   };
 
@@ -385,7 +394,13 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
 
   const draw = () => {
     if (!context) return;
-    context.clearRect(0, 0, courtWidth, courtHeight);
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, pongCanvas.width, pongCanvas.height);
+    if (isMobileCourt()) {
+      context.setTransform(0, pongCanvas.height / courtWidth, -pongCanvas.width / courtHeight, 0, pongCanvas.width, 0);
+    } else {
+      context.setTransform(pongCanvas.width / courtWidth, 0, 0, pongCanvas.height / courtHeight, 0, 0);
+    }
     context.fillStyle = '#10152f';
     context.fillRect(0, 0, courtWidth, courtHeight);
     context.strokeStyle = 'rgba(255,255,255,.2)';
@@ -446,7 +461,16 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
       context.font = '600 23px DM Sans, sans-serif';
       context.textAlign = 'center';
       context.textBaseline = 'middle';
-      context.fillText(finished ? (playerScore >= roundsToWin ? 'YOU WIN!' : 'CPU WINS') : 'PONG', courtWidth / 2, courtHeight / 2);
+      const message = finished ? (playerScore >= roundsToWin ? 'YOU WIN!' : 'CPU WINS') : 'PONG';
+      if (isMobileCourt()) {
+        context.save();
+        context.translate(courtWidth / 2, courtHeight / 2);
+        context.rotate(-Math.PI / 2);
+        context.fillText(message, 0, 0);
+        context.restore();
+      } else {
+        context.fillText(message, courtWidth / 2, courtHeight / 2);
+      }
     }
   };
 
@@ -623,8 +647,12 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
   const movePlayerToPointer = (event) => {
     if (!active) return;
     const bounds = pongCanvas.getBoundingClientRect();
-    player.y = ((event.clientY - bounds.top) / bounds.height) * courtHeight;
-    clampPaddle(player);
+    if (isMobileCourt()) {
+      const horizontalPosition = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+      setPlayerPosition((1 - horizontalPosition) * courtHeight);
+    } else {
+      setPlayerPosition(((event.clientY - bounds.top) / bounds.height) * courtHeight);
+    }
     draw();
   };
 
@@ -639,7 +667,7 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
       cpuScore = 0;
       finished = false;
       resetPowerups();
-      player.y = courtHeight / 2;
+      setPlayerPosition(courtHeight / 2);
       cpu.y = courtHeight / 2;
       updateScore();
       serveBall(1);
@@ -648,7 +676,9 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
     active = true;
     setSettingsLocked(true);
     pongStartButton.textContent = 'Pause game';
-    pongStatus.textContent = 'Game on! Move your paddle to return the ball.';
+    pongStatus.textContent = isMobileCourt()
+      ? 'Game on! Use the slider to move your paddle.'
+      : 'Game on! Move your paddle to return the ball.';
     draw();
     startAnimation();
   });
@@ -659,7 +689,7 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
     setSettingsLocked(false);
     playerScore = 0;
     cpuScore = 0;
-    player.y = courtHeight / 2;
+    setPlayerPosition(courtHeight / 2);
     cpu.y = courtHeight / 2;
     resetPowerups();
     randomizeCpuCountry();
@@ -673,20 +703,31 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
   pongCanvas.addEventListener('pointermove', movePlayerToPointer);
   pongCanvas.addEventListener('pointerdown', (event) => {
     pongCanvas.focus();
+    if (event.pointerType === 'touch') pongCanvas.setPointerCapture(event.pointerId);
     movePlayerToPointer(event);
   });
   pongCanvas.addEventListener('keydown', (event) => {
     if (!active) return;
-    if (event.key === 'ArrowUp' || event.key.toLowerCase() === 'w') {
+    const key = event.key.toLowerCase();
+    if (isMobileCourt() && (event.key === 'ArrowLeft' || key === 'a')) {
       event.preventDefault();
-      player.y -= 24;
-    } else if (event.key === 'ArrowDown' || event.key.toLowerCase() === 's') {
+      setPlayerPosition(player.y + 24);
+    } else if (isMobileCourt() && (event.key === 'ArrowRight' || key === 'd')) {
       event.preventDefault();
-      player.y += 24;
+      setPlayerPosition(player.y - 24);
+    } else if (!isMobileCourt() && (event.key === 'ArrowUp' || key === 'w')) {
+      event.preventDefault();
+      setPlayerPosition(player.y - 24);
+    } else if (!isMobileCourt() && (event.key === 'ArrowDown' || key === 's')) {
+      event.preventDefault();
+      setPlayerPosition(player.y + 24);
     } else {
       return;
     }
-    clampPaddle(player);
+    draw();
+  });
+  paddleSlider?.addEventListener('input', () => {
+    setPlayerPosition((1 - Number(paddleSlider.value) / 1000) * courtHeight);
     draw();
   });
   countrySelect?.addEventListener('change', () => {
@@ -702,7 +743,7 @@ if (pongCanvas && pongStartButton && pongResetButton && pongStatus && pongDialog
   pongOpenButton.addEventListener('click', () => {
     pongDialog.showModal();
     resizeCanvas();
-    pongStartButton.focus();
+    pongCloseButton.focus();
   });
   pongCloseButton.addEventListener('click', () => {
     pauseGame();

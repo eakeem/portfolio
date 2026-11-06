@@ -444,8 +444,10 @@ body {
 .pong-country-badge { display: inline-flex; align-items: center; gap: 4px; margin-left: 3px; padding: 2px 6px; border: 1px solid #ded5c7; border-radius: 999px; background: #f8f4ed; color: var(--brand-indigo); font-size: 8px; font-weight: 700; line-height: 1.2; text-transform: uppercase; vertical-align: 1px; }
 .pong-country-badge i { display: inline-block; width: 15px; height: 9px; border: 1px solid rgb(40 39 31 / 14%); border-radius: 2px; background: #ddd; }
 .pong-score-divider { color: #a9a092; }
-.pong-court { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid #d8d1e2; border-radius: 12px; outline: none; background: #10152f; touch-action: none; }
+.pong-court-frame { width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid #d8d1e2; border-radius: 12px; background: #10152f; }
+.pong-court { display: block; width: 100%; height: 100%; outline: none; background: #10152f; touch-action: none; }
 .pong-court:focus-visible { outline: 2px solid var(--brand-violet); outline-offset: 3px; }
+.pong-mobile-instructions, .pong-paddle-control { display: none; }
 .pong-status { min-height: 18px; color: #777065; font-size: 11px; text-align: center; }
 .pong-controls { display: flex; justify-content: center; gap: 9px; }
 .pong-button { min-height: 38px; cursor: pointer; font-family: var(--sans); }
@@ -476,11 +478,23 @@ body {
 .pong-settings:disabled { opacity: .58; }
 .pong-dialog .pong-meta { gap: 10px; padding: 0; }
 .pong-dialog .pong-status { margin: 0; }
-.pong-powerup-help { margin: 0; padding: 10px 12px; border: 1px solid #e8e1d7; border-radius: 10px; background: #f8f4ed; color: #777065; font-size: 10px; line-height: 1.6; }
+.pong-powerup-help { border: 1px solid #e8e1d7; border-radius: 10px; background: #f8f4ed; color: #777065; font-size: 10px; line-height: 1.6; }
+.pong-powerup-help summary { padding: 8px 12px; color: var(--brand-indigo); cursor: pointer; font-weight: 600; }
+.pong-powerup-help p { margin: 0; padding: 0 12px 10px; }
 .pong-powerup-help strong { color: var(--brand-indigo); }
 @media (max-width: 600px) {
   .pong-dialog { width: calc(100% - 24px); max-height: calc(100% - 24px); border-radius: 16px; }
   .pong-dialog-content { gap: 10px; padding: 16px; }
+  .pong-dialog-heading h3 { font-size: 20px; white-space: nowrap; }
   .pong-settings { gap: 8px; }
-  .pong-settings label { flex-basis: 135px; }
+  .pong-settings label { min-width: 0; flex: 1 1 0; }
+  .pong-desktop-instructions { display: none; }
+  .pong-mobile-instructions { display: inline; }
+  .pong-court-frame { width: min(100%, 24.75vh); aspect-ratio: 9 / 16; margin-inline: auto; }
+  .pong-paddle-control { display: grid; gap: 5px; color: #777065; font-size: 10px; font-weight: 600; }
+  .pong-paddle-control input { width: 100%; min-height: 34px; margin: 0; accent-color: var(--brand-violet); cursor: pointer; touch-action: pan-x; }
+  .pong-paddle-control input:focus-visible { outline: 2px solid var(--brand-violet); outline-offset: 2px; }
+}
+@media (max-width: 600px) and (max-height: 700px) {
+  .pong-court-frame { width: min(100%, 22.5vh); }
 }
